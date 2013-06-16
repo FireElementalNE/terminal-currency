@@ -48,15 +48,15 @@ def printInfo(name1,name2,amount1,amount2):
 
 def getInfo(currency1,currency2,amount1):
 	url = 'http://rate-exchange.appspot.com/currency?from=%s&to=%s' % (currency1,currency2)
-	content = json.loads(urlopen(url).read())
-	try:
-		curTo = content['to']
-		curFrom = content['from']
-		rate = content['rate']
-	except KeyError:
-		print 'Something went wrong'
-		sys.exit(0)
-	printInfo(CODES[curFrom],CODES[curTo],amount1,getAmount2(rate,amount1))
+        try:
+            content = json.loads(urlopen(url).read())
+            curTo = content['to']
+            curFrom = content['from']
+            rate = content['rate']
+	except (KeyError,ValueError):
+            print 'One of the currencies is not in the database...'
+            sys.exit(0)
+        printInfo(CODES[curFrom],CODES[curTo],amount1,getAmount2(rate,amount1))
 
 try: 
 	amount1 = sys.argv[1]
