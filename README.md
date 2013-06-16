@@ -1,7 +1,7 @@
-Ever wanted to get the weather on a terminal only install?
+Ever wanted to get Currency Exchange Rates on a terminal only install?
 
 Then here is your answer!
 
-usage: python weather.py <city> <country>
+usage: python currency.py <amount> <currency> <currency>
 
 FireElementalNE
