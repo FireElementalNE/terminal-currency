@@ -1,4 +1,7 @@
-terminal-currency
-=================
+Ever wanted to get the weather on a terminal only install?
 
-Get Currency Exchages with a simple python script
+Then here is your answer!
+
+usage: python weather.py <city> <country>
+
+FireElementalNE
