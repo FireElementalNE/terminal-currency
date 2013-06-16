@@ -1,11 +1,7 @@
 '''
 Get the Exchange Rates on your terminal!
 
-This project was ported from a shell scipt forum post found here:
-
-https://bbs.archlinux.org/viewtopic.php?id=37381
-
-It also uses some code from the Python Cookbook
+It  uses some code from the Python Cookbook
 '''
 
 import sys,json,re
@@ -48,7 +44,7 @@ def printInfo(name1,name2,amount1,amount2):
 	sys.stdout.write(str(amount1) + ' ')
  	printout(name1+'(s)',RED)
  	sys.stdout.write(' is exquivalent to ' + str(amount2) + ' ')
- 	printout(name2+'(s)',GREEN)
+ 	printout(name2+'(s)\n',GREEN)
 
 def getInfo(currency1,currency2,amount1):
 	url = 'http://rate-exchange.appspot.com/currency?from=%s&to=%s' % (currency2,currency1)
