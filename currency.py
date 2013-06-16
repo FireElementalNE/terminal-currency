@@ -47,7 +47,7 @@ def printInfo(name1,name2,amount1,amount2):
  	printout(name2+'(s)\n',GREEN)
 
 def getInfo(currency1,currency2,amount1):
-	url = 'http://rate-exchange.appspot.com/currency?from=%s&to=%s' % (currency2,currency1)
+	url = 'http://rate-exchange.appspot.com/currency?from=%s&to=%s' % (currency1,currency2)
 	content = json.loads(urlopen(url).read())
 	try:
 		curTo = content['to']
@@ -56,7 +56,7 @@ def getInfo(currency1,currency2,amount1):
 	except KeyError:
 		print 'Something went wrong'
 		sys.exit(0)
-	printInfo(CODES[curTo],CODES[curFrom],amount1,getAmount2(rate,amount1))
+	printInfo(CODES[curFrom],CODES[curTo],amount1,getAmount2(rate,amount1))
 
 try: 
 	amount1 = sys.argv[1]
