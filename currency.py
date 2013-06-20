@@ -60,8 +60,8 @@ def getInfo(currency1,currency2,amount1):
 
 try: 
 	amount1 = sys.argv[1]
-	cur1 = sys.argv[2]
-	cur2 = sys.argv[3]
+	cur1 = sys.argv[2].upper()
+	cur2 = sys.argv[3].upper()
 	getInfo(cur1,cur2,amount1)
 except IndexError:
 	print 'usage: python ' + sys.argv[0] + ' <amount> <currency> <currency>'
