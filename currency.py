@@ -4,9 +4,12 @@ Get the Exchange Rates on your terminal!
 It  uses some code from the Python Cookbook
 '''
 
-import sys,json,re
-from curCodes import CODES
+import sys
+import json
+import argparse
+
 from urllib import urlopen
+
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 
@@ -37,50 +40,44 @@ def printout(text, colour=WHITE):
         sys.stdout.write(text)
 
 #END python cookbook
-def getAmount2(rate,amount):
-    return  round(rate*float(amount), 2)
 
-def printInfo(name1,name2,amount1,amount2):
-    sys.stdout.write(str(amount1) + ' ')
-    printout(name1+'(s)',RED)
-    sys.stdout.write(' is exquivalent to ' + str(amount2) + ' ')
-    printout(name2+'(s)\n',GREEN)
+def print_info_amount(currency_from, currency_to, num_from, num_to):
+    sys.stdout.write('%.2f in ' % round(num_from,2))
+    printout('%s' % currency_from, RED)
+    sys.stdout.write(' is exquivalent to %.2f in ' % round(num_to,2))
+    printout('%s\n' % currency_to, GREEN)
 
-def printInfo2(name1,name2,rate):
+def print_info_no_amount(currency_from, currency_to, rate):
     sys.stdout.write('The rate from ')
-    printout(name1,RED)
+    printout(currency_from, RED)
     sys.stdout.write(' to ')
-    printout(name2,GREEN)
+    printout(currency_to, GREEN)
     sys.stdout.write(' is ')
-    printout(str(rate)+'\n',YELLOW)
+    printout('%f\n' % rate,YELLOW)
 
-def getInfo(currency1,currency2,amount1):
-    url = 'http://rate-exchange.appspot.com/currency?from=%s&to=%s' % (currency1,currency2)
-    try:
-        content = json.loads(urlopen(url).read())
-        curTo = content['to']
-        curFrom = content['from']
-        rate = content['rate']
-    except (KeyError,ValueError):
-        print 'One of the currencies is not in the database...'
-        sys.exit(0)
-    if amount1 == None:
-        printInfo2(CODES[curFrom],CODES[curTo],rate)
+def get_info(currency_from, currency_to, amount):
+    url = 'https://currency-api.appspot.com/api/%s/%s.json' % (currency_from, currency_to)
+    content = json.loads(urlopen(url).read())
+    if content['message']:
+        print 'API returned error: %s' % content['message']
     else:
-        printInfo(CODES[curFrom],CODES[curTo],amount1,getAmount2(rate,amount1))
-
-def runMain(cur1,cur2,amount=None):
-    getInfo(cur1,cur2,amount)
+        curTo = content['source']
+        curFrom = content['target']
+        rate = content['rate']
+        if not amount:
+            print_info_no_amount(currency_from, currency_to, rate)
+        else:
+            print_info_amount(currency_from, currency_to, amount, amount * float(rate))
+def run_main(currency_from, currency_to, amount=None):
+    get_info(currency_to, currency_from, amount);
 
 if __name__ == "__main__":
-    try: 
-	cur1 = sys.argv[1].upper()
-	cur2 = sys.argv[2].upper()
-        amount=0
-	try:
-            amount = sys.argv[3]
-            runMain(cur1,cur2,amount)
-        except IndexError:
-            runMain(cur1,cur2)
-    except IndexError:
-	print 'usage: python ' + sys.argv[0] + ' <currency> <currency> <OPTIONS: amount>'
+    parser = argparse.ArgumentParser(description='Terminal Currency')
+    parser.add_argument('-t', '--tocur', help='Currency _TO_', required=True, type=str)
+    parser.add_argument('-f', '--fromcur', help='Currency _FROM_', required=True, type=str)
+    parser.add_argument('-a', '--amount', help='Amount', required=False, type=float)
+    args = parser.parse_args()
+    if args.amount:
+        run_main(args.fromcur, args.tocur, args.amount)
+    else:
+        run_main(args.tocur, args.fromcur)
